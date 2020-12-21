@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
+# Place the 'recipe_data.pkl' in the same folder as this file
+# This code works only if connected to an OOCSI channel and receives input ingredients
+# Always close the OOCSI connection with esc after using it so you can continue using the same unique_handler
+
+
 import time
 from oocsi import OOCSI
 import pandas as pd
 import keyboard
 
-df_rec = pd.read_pickle('new_dataframe.pkl')
+df_rec = pd.read_pickle('recipe_data.pkl')
 
+# A list with all the ingredients from the recipes that can be grown in one's garden
 plant_list =[]
 for i in range(len(df_rec['plants'])):
     temp = df_rec['plants'].loc[i].split(", ")
@@ -16,6 +22,9 @@ for i in range(len(df_rec['plants'])):
 unique_plant = list(set(plant_list))
 unique_plant = sorted(unique_plant)
 
+
+# Create a vector to represent which plants are used in that recipe. The sequence is based on the plant_list.
+# A 0 is added if the plant is not in the recipe, a 1 if it is in the recipe
 def plants_vector(plants):
     for i in range(len(df_rec['plants'])):
         vector_plant = [] 
@@ -29,6 +38,8 @@ def plants_vector(plants):
 
     
 # Most popular recipes in general
+# Create a dataframe with all the possible recipes with at least one of the entered ingredients
+# Sort the dataframe on popularity score to get the most popular recipes
 def pos_recipes(plants):
     print("Recepten met ", plants, ":")
     global df_recipes
@@ -37,7 +48,8 @@ def pos_recipes(plants):
     a= plants_vector(plants)
     for e in range(len(df_rec['Plant vector'])):
         b= df_rec['Plant vector'].loc[e]
-       # print(e, df_rec['recipe_name'].loc[e])
+        # count can be used to see how many of the entered ingredients are used in that recipe
+        # currently it is not being used except to see if there is at least 1 plant used
         count =0
         for i, j in zip(a, b):
             if i == j:
@@ -97,8 +109,7 @@ def family_recipes(plants):
 
     
 # connect to OOCSI running on a webserver
-oocsi = OOCSI('Botano_Recipe_Recommender_8', "oocsi.id.tue.nl")
-#oocsi.subscribe('RecipeRecommender', receiveEvent)
+oocsi = OOCSI('Your_Unique_Handler', "oocsi.id.tue.nl")
 ing = oocsi.variable('RecipeRecommender', 'ingredients')
 filterVar = oocsi.variable('RecipeRecommender', 'filter')
 oldFilter= filterVar.get()
@@ -110,8 +121,6 @@ v1= ing.get()
 
 
 while True:
-   # print(v1, ing.get())
-  # print(filterVar.get())
    if (v1 != ing.get()) or filterVar.get() != oldFilter:
        if filterVar.get() == "popular":
             pos_recipes(ing.get())
