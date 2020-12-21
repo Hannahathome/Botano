@@ -6,7 +6,7 @@ Botano is a family of products, which helps users take care of your edible plant
 ## Files in this repository
 - Arduino code for ESP32 (for connecting the ESP to the OOCSI network)
 - Python code (for creating ingredients vectors; for recommending recipes based on the entered plants and selected filters (via OOCSI HTML)) 
-- HTML & JavaScript (for creating a website to display the dataflows to and from OOCSI) 
+- HTML, PHP & JavaScript (for creating a website to display the dataflows to and from OOCSI) 
 
 ## OOCSI
 [OOCSI](https://github.com/iddi/oocsi) is a opensource prototyping tool which supports connected prototyping and communication between groups of products across platforms.
